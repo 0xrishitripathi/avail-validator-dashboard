@@ -318,6 +318,49 @@
                 const originalIndex = rows.indexOf(row);
                 const detailRow = detailRows[originalIndex];
                 
+                // Update the row's onclick handler with the new index
+                const validatorLink = row.querySelector('a[onclick]');
+                if (validatorLink) {
+                    const newId = `details-${index}`;
+                    validatorLink.setAttribute('onclick', `toggleDetails('${newId}'); return false;`);
+                }
+                
+                // Update the detail row's ID and related elements
+                if (detailRow) {
+                    const newId = `details-${index}`;
+                    detailRow.id = newId;
+                    
+                    // Update chart container and canvas IDs
+                    const chartContainer = detailRow.querySelector('[id^="blockChart-"]');
+                    const canvas = detailRow.querySelector('canvas[id^="blockChart-"]');
+                    
+                    if (chartContainer) {
+                        const newChartContainerId = `blockChart-${index}-container`;
+                        chartContainer.id = newChartContainerId;
+                    }
+                    
+                    if (canvas) {
+                        const newCanvasId = `blockChart-${index}`;
+                        canvas.id = newCanvasId;
+                    }
+                    
+                    // Preserve the validator stash data attribute
+                    const validatorStash = detailRow.getAttribute('data-validator-stash');
+                    if (validatorStash) {
+                        detailRow.setAttribute('data-validator-stash', validatorStash);
+                    }
+                    
+                    // Reset display state and clear any existing chart data
+                    detailRow.style.display = 'none';
+                    if (chartContainer) {
+                        chartContainer.style.display = 'block';
+                        chartContainer.innerHTML = ''; // Clear any existing content
+                    }
+                    if (canvas) {
+                        canvas.style.display = 'none';
+                    }
+                }
+                
                 tbody.appendChild(row);
                 tbody.appendChild(detailRow);
             });
@@ -337,12 +380,14 @@
         // Add this function to show loading state
         function showLoading(containerId) {
             const container = document.getElementById(containerId);
-            container.innerHTML = `
-                <div class="loading-container">
-                    <div class="loading-animation"></div>
-                </div>
-            `;
-            container.style.display = 'block';
+            if (container) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; height: 160px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; margin-top: 20px; margin-right: 120px;">
+                        <div class="loading-animation"></div>
+                    </div>
+                `;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -421,23 +466,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        .loading-container {
-            text-align: center;
-            padding: 20px;
-            height: 160px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            margin-top: 20px;    /* Adjust this to move down */
-            margin-right: 120px; /* Adjust this to move left */
-            /* Alternative positioning method:
-            position: relative;
-            left: -120px;  Negative value moves left
-            top: 40px;     Positive value moves down
-            */
         }
 
         tr[id^="details-"] {
