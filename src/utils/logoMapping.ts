@@ -1,5 +1,6 @@
 // Mapping of validator names (lowercase) to their logo filenames
 export const validatorLogos: Record<string, string> = {
+  '5elementsnodes': '5elements.jpg',
   'vnbnode': 'VNBnode.jpg',
   'ainodes': 'ainodes.jpg',
   'aknodes': 'aknodes.png',
