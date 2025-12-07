@@ -76,6 +76,17 @@ interface TelemetryResponse {
 let telemetryCache: { data: Map<string, string>; timestamp: number } | null = null;
 const TELEMETRY_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Normalize string by removing emojis and special characters for matching
+function normalizeForMatching(str: string): string {
+  // Remove emojis and special unicode characters, keep alphanumeric and basic punctuation
+  return str
+    .toLowerCase()
+    .replace(/[\u{1F300}-\u{1F9FF}]/gu, '') // Remove emojis
+    .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII characters
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 async function fetchNodeVersions(): Promise<Map<string, string>> {
   // Check cache
   if (telemetryCache && Date.now() - telemetryCache.timestamp < TELEMETRY_CACHE_TTL) {
@@ -93,10 +104,16 @@ async function fetchNodeVersions(): Promise<Map<string, string>> {
     if (response.ok) {
       const data: TelemetryResponse = await response.json();
       
-      // Build a map of node_name -> version
+      // Build a map of node_name -> version (both original and normalized)
       for (const impl of data.implementations) {
         for (const node of impl.nodes) {
+          // Store with original lowercase key
           nodeVersionMap.set(node.node_name.toLowerCase(), impl.version);
+          // Also store with normalized key for emoji handling
+          const normalized = normalizeForMatching(node.node_name);
+          if (normalized) {
+            nodeVersionMap.set(normalized, impl.version);
+          }
         }
       }
     }
@@ -246,7 +263,9 @@ export async function GET(request: NextRequest) {
       // Get node version by matching telemetry name
       let nodeVersion = '';
       if (info?.telemetry) {
-        nodeVersion = nodeVersions.get(info.telemetry.toLowerCase()) || '';
+        // Try original lowercase first, then normalized version
+        nodeVersion = nodeVersions.get(info.telemetry.toLowerCase()) || 
+                      nodeVersions.get(normalizeForMatching(info.telemetry)) || '';
       }
       
       validators.push({
