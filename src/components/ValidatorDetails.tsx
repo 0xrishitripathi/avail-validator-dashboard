@@ -24,6 +24,8 @@ function StatItem({ icon: Icon, label, value }: { icon: React.ElementType; label
 }
 
 function BlockHistoryChart({ history, loading }: { history: ValidatorHistory | null; loading: boolean }) {
+  const [selectedBar, setSelectedBar] = useState<number | null>(null);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-40">
@@ -42,24 +44,38 @@ function BlockHistoryChart({ history, loading }: { history: ValidatorHistory | n
 
   const maxBlocks = Math.max(...history.blocks);
 
+  const handleBarClick = (index: number) => {
+    setSelectedBar(selectedBar === index ? null : index);
+  };
+
   return (
     <div className="h-44">
       <div className="flex items-end justify-between gap-1" style={{ height: '120px' }}>
         {history.blocks.map((blocks, index) => {
           const heightPx = maxBlocks > 0 ? Math.max((blocks / maxBlocks) * 110, 6) : 6;
+          const isSelected = selectedBar === index;
           return (
             <div
               key={history.eras[index]}
-              className="flex-1 flex flex-col items-center group relative"
+              className="flex-1 flex flex-col items-center group relative cursor-pointer"
               style={{ height: '100%' }}
+              onClick={() => handleBarClick(index)}
+              onMouseEnter={() => setSelectedBar(index)}
+              onMouseLeave={() => setSelectedBar(null)}
             >
               <div className="absolute bottom-0 w-full flex justify-center">
                 <div
-                  className="w-full max-w-[16px] bg-gradient-to-t from-[#3d9be0] to-[#5fb3fc] rounded-t transition-all hover:from-[#5fb3fc] hover:to-[#8ac9fd]"
+                  className={`w-full max-w-[16px] rounded-t transition-all ${
+                    isSelected 
+                      ? 'bg-gradient-to-t from-[#5fb3fc] to-[#8ac9fd]' 
+                      : 'bg-gradient-to-t from-[#3d9be0] to-[#5fb3fc]'
+                  }`}
                   style={{ height: `${heightPx}px` }}
                 />
               </div>
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#2a2a2a] rounded text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+              <div className={`absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#2a2a2a] rounded text-xs text-white transition-opacity whitespace-nowrap z-10 pointer-events-none ${
+                isSelected ? 'opacity-100' : 'opacity-0'
+              }`}>
                 Era {history.eras[index]}: {blocks} blocks
               </div>
             </div>
