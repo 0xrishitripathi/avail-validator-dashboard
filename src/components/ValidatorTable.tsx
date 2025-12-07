@@ -4,6 +4,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, ChevronUp, ChevronDown, Copy, Check, Filter, X } from 'lucide-react';
 import type { Validator, SortField, SortDirection } from '@/types';
 import { ValidatorDetails } from './ValidatorDetails';
+import { getValidatorLogo } from '@/utils/logoMapping';
 
 interface ValidatorTableProps {
   validators: Validator[];
@@ -445,7 +446,24 @@ export function ValidatorTable({ validators, loading, currentEra }: ValidatorTab
                 >
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#5fb3fc] to-[#3d9be0] flex items-center justify-center text-xs font-medium text-white">
+                      {(() => {
+                        const logoUrl = getValidatorLogo(validator.name);
+                        return logoUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img 
+                            src={logoUrl} 
+                            alt={validator.name || 'Validator'} 
+                            className="w-8 h-8 rounded-full object-cover bg-[#2a2a2a]"
+                            onError={(e) => {
+                              // Fallback to index number if image fails to load
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null;
+                      })()}
+                      <div className={`w-8 h-8 rounded-full bg-gradient-to-br from-[#5fb3fc] to-[#3d9be0] flex items-center justify-center text-xs font-medium text-white ${getValidatorLogo(validator.name) ? 'hidden' : ''}`}>
                         {index + 1}
                       </div>
                       <div>
