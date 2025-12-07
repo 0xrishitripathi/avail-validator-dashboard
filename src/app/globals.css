@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0d0d0d;
+  --foreground: #ffffff;
+  --card-bg: #1a1a1a;
+  --card-border: #2a2a2a;
+  --accent: #5fb3fc;
+  --accent-light: #8ac9fd;
+  --success: #22c55e;
+  --muted: #6b7280;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Table styles */
+.validator-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.validator-table th {
+  position: sticky;
+  top: 0;
+  background: var(--card-bg);
+  z-index: 10;
+}
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--card-bg) 25%, var(--card-border) 50%, var(--card-bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  /* Ensure horizontal scroll works smoothly on mobile */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  
+  /* Make table cells more compact on mobile */
+  .validator-table td,
+  .validator-table th {
+    padding: 0.75rem 0.5rem;
+    white-space: nowrap;
+  }
+  
+  /* Smaller text on mobile */
+  .validator-table {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Even more compact on small screens */
+  .validator-table td,
+  .validator-table th {
+    padding: 0.5rem 0.375rem;
+  }
+  
+  .validator-table {
+    font-size: 0.75rem;
+  }
+}
