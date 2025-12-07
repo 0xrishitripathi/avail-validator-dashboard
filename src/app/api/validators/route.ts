@@ -4,6 +4,18 @@ import type { EraData, Validator } from '@/types';
 import fs from 'fs';
 import path from 'path';
 
+// Format large numbers in a readable way (e.g., 4.8B, 1.2M)
+function formatLargeNumber(num: number): string {
+  if (num >= 1e9) {
+    return (num / 1e9).toFixed(2) + 'B';
+  } else if (num >= 1e6) {
+    return (num / 1e6).toFixed(2) + 'M';
+  } else if (num >= 1e3) {
+    return (num / 1e3).toFixed(2) + 'K';
+  }
+  return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
 // Load validator info from CSV (names and telemetry)
 interface ValidatorInfo {
   name: string;
@@ -283,7 +295,7 @@ export async function GET(request: NextRequest) {
       currentEra: currentEraNum,
       totalValidators: validators.length,
       totalBlocks,
-      totalStake: totalStakeSum.toLocaleString('en-US', { maximumFractionDigits: 0 }),
+      totalStake: formatLargeNumber(totalStakeSum),
       stakingRatio: stakingRatio.toFixed(2) + '%',
       apy: apy.toFixed(2) + '%',
       validators
