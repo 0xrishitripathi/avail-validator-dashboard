@@ -60,7 +60,7 @@ export function StatsCards({ data, loading }: StatsCardsProps) {
       <StatCard
         icon={Coins}
         label="Total Stake"
-        value={data?.totalStake || '0'}
+        value={data ? `${data.totalStake} AVAIL` : '0 AVAIL'}
         loading={loading}
       />
       <StatCard
