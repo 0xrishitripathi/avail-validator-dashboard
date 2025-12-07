@@ -24,7 +24,8 @@ export function EraSelector({ currentEra, selectedEra, onEraChange, loading }: E
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const eras = Array.from({ length: Math.min(100, currentEra + 1) }, (_, i) => currentEra - i);
+  // Show last 84 eras (currentEra down to currentEra - 83)
+  const eras = Array.from({ length: Math.min(84, currentEra + 1) }, (_, i) => currentEra - i);
 
   return (
     <div className="relative" ref={dropdownRef}>
