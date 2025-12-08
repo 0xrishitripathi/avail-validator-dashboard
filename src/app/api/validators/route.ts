@@ -160,10 +160,21 @@ export async function GET(request: NextRequest) {
   try {
     const api = await getApi();
     
-    // Get current era
+    // Get current era from chain
     const currentEraResult = await api.query.staking.currentEra() as any;
     const currentEra = currentEraResult.unwrapOr(0);
-    const currentEraNum = Number(currentEra.toString());
+    let currentEraNum = Number(currentEra.toString());
+    
+    // Check if the current era actually has data (era might be reported before it starts)
+    // If no data exists for current era, use previous era
+    if (!eraParam) {
+      const testEraPoints = await api.query.staking.erasRewardPoints(currentEraNum);
+      const testTotal = Number((testEraPoints as any).total.toString());
+      if (testTotal === 0) {
+        // Current era hasn't started yet, use previous era
+        currentEraNum = currentEraNum - 1;
+      }
+    }
     
     const selectedEra = eraParam ? parseInt(eraParam) : currentEraNum;
     
