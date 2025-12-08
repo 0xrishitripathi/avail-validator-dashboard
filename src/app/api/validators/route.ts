@@ -244,16 +244,19 @@ export async function GET(request: NextRequest) {
     const nodeVersions = await fetchNodeVersions();
     const validatorInfo = getValidatorInfo();
     
-    // Build validators list
+    // Build a map of era points for quick lookup
+    const eraPointsMap = new Map<string, number>();
+    for (const [address, points] of individual.entries()) {
+      eraPointsMap.set(address.toString(), Number(points.toString()));
+    }
+    
+    // Build validators list from ALL validators in the active set (stakersMap)
+    // This ensures we show all validators even if they haven't produced blocks yet
     const validators: Validator[] = [];
     
-    for (const [address, points] of individual.entries()) {
-      const addr = address.toString();
-      const eraPoints = Number(points.toString());
-      const stakeInfo = stakersMap.get(addr);
+    for (const [addr, stakeInfo] of stakersMap.entries()) {
+      const eraPoints = eraPointsMap.get(addr) || 0;
       const commission = prefsMap.get(addr) || 0;
-      
-      if (!stakeInfo) continue;
       
       const totalStake = stakeInfo.total;
       const ownStake = stakeInfo.own;
