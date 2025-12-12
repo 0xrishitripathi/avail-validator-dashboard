@@ -55,7 +55,7 @@ export const validatorLogos: Record<string, string> = {
   'senseinode': 'sensei.png',
   'silk nodes': 'silk nodes.jpeg',
   'speedy staking': 'speedy staking.jpg',
-  'stake.works': 'stake.works.png',
+  'stake.works': 'stakeworks.jpg',
   'stakely': 'stakely.png',
   'stakepool': 'stakepool.jpg',
   'stakerhouse': 'stakerhouse.svg',
