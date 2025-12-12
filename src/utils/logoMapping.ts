@@ -65,6 +65,7 @@ export const validatorLogos: Record<string, string> = {
   'subwallet': 'subwallet.png',
   'tecnodes': 'tecnodes.jpg',
   'natsai': 'natsai.jpg',
+  'vault staking': 'vaultstaking.jpg',
   'vido.info': 'vido-info.png',
   'vitwit': 'vitwit.jpeg',
   'xangle': 'xangle.jpg',
