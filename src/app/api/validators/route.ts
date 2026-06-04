@@ -22,11 +22,20 @@ interface ValidatorInfo {
   telemetry: string;
 }
 
+function readValidatorInfoCsv(): string {
+  const csvFromEnv = process.env.VALIDATOR_INFO_CSV || process.env.VALIDATORINFO_CSV;
+  if (csvFromEnv) {
+    return csvFromEnv.replace(/\\n/g, '\n');
+  }
+
+  const csvPath = path.join(process.cwd(), 'validatorinfo.csv');
+  return fs.readFileSync(csvPath, 'utf-8');
+}
+
 function loadValidatorInfo(): Map<string, ValidatorInfo> {
   const infoMap = new Map<string, ValidatorInfo>();
   try {
-    const csvPath = path.join(process.cwd(), 'validatorinfo.csv');
-    const csvContent = fs.readFileSync(csvPath, 'utf-8');
+    const csvContent = readValidatorInfoCsv();
     const lines = csvContent.split('\n');
     
     // Skip header row
