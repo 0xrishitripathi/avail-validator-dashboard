@@ -10,9 +10,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Avail Validator Dashboard",
   description: "Monitor Avail network validators and staking metrics",
-  icons: {
-    icon: "/Dark%20Horizontal.svg",
-  },
 };
 
 export default function RootLayout({
