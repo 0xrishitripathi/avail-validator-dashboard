@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Avail Validator Dashboard",
   description: "Monitor Avail network validators and staking metrics",
   icons: {
-    icon: "https://raw.githubusercontent.com/0xrishitripathi/logo/main/avail_logo.svg",
+    icon: "/Dark%20Horizontal.svg",
   },
 };
 

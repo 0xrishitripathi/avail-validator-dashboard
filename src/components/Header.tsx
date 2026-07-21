@@ -8,7 +8,7 @@ export function Header() {
           <div className="flex items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="https://raw.githubusercontent.com/0xrishitripathi/logo/main/Dark%20Horizontal.svg" 
+              src="/Dark%20Horizontal.svg" 
               alt="Avail" 
               className="w-24 sm:w-[120px] h-auto"
             />
